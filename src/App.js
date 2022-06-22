@@ -64,20 +64,6 @@ function App() {
     }
 
   }
-  const s = 
-  {
-    data: {
-      values: []
-    },
-    width: '800',
-    height: '800',
-    mark: 'circle',
-    encoding: {
-      x: {"field": "x", type: "quantitative", "axis": {"grid": false, "labels": false, "tickSize": 0}, title: null },
-      y: {"field": "y", type: "quantitative", "axis": {"grid": false, "labels": false, "tickSize": 0}, title: null },
-      color: {"field": "method", type: "nominal", legend: null}
-  },
-  }
   
   
 
@@ -92,8 +78,8 @@ function App() {
       let rf = require(`/public/json/${x}_rf.json`);
       let cc = require(`/public/json/${x}_cc.json`);
       let cls = require(`/public/json/${x}_cls.json`);
-      cc = cc.map(d => ({x:d.x, y:d.y, img: '/public/img/'+opacity+'/'+d.num.toString()+'.png'}));
-      // cc = cc.map(d => ({x:d.x, y:d.y, img: '/img/visualization.png'}))
+      cc = cc.map(d => ({x:d.x, y:d.y, img: 'https://aeri206.github.io/mdp-tour/img/'+opacity+'/'+d.num.toString()+'.png'}));
+      // cc = cc.map(d => ({x:d.x, y:d.y, img: 'visualization.png'}))
       
       rf = rf.map(x => x.split('-')[0]);
       // s['data']['values'] = lv.map((d, i) => ({x: d[0], y:d[1], method: rf[i]}))
