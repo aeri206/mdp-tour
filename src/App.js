@@ -1,11 +1,11 @@
 import './App.css';
 import * as d3 from "d3";
 
-import { Box, Grid } from 'grommet';
+import { Box, Select } from 'grommet';
 import {  VegaLite } from 'react-vega'
 
 import embed from 'vega-embed';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Scatterplot } from "./components/scatterplot";
 
 
@@ -25,7 +25,8 @@ function embScale(embedding) {
 function App() {
 
   
-  const dataset = 'spheres'
+  const [xxx, setDataset] = useState('spheres_2000_3');
+  let dataset = xxx.split('_')[0];
   const ss = {
     layer: [
       {
@@ -88,19 +89,21 @@ function App() {
   
   let mainViewSplot;
   
-
+  
   useEffect(() => {
 
     (async function() {
 
       const opacity = ['0.7', '1.0'][0]
 
-      const x = 's_2000_3'
-      let lv = require(`/public/json/${x}_lv.json`);
-      let rf = require(`/public/json/${x}_rf.json`);
-      let cc = require(`/public/json/${x}_cc.json`);
       
-      let cls = require(`/public/json/${x}_cls.json`);
+      let lv = require(`/public/json/${xxx}_lv.json`);
+      let rf = require(`/public/json/${xxx}_rf.json`);
+      let cc = require(`/public/json/${xxx}_cc.json`);
+      
+      let cls = require(`/public/json/${xxx}_cls.json`);
+      const ld = require(`/public/json/${dataset}/${cc[0].name}`);
+      // cc = cc.map(d => ({x:d.x, y:d.y, img: 'https://aeri206.github.io/mdp-tour/img/'+xxx + '/' + +opacity+'/'+d.num.toString()+'.png', name: d.name}));
       cc = cc.map(d => ({x:d.x, y:d.y, img: 'https://aeri206.github.io/mdp-tour/img/'+opacity+'/'+d.num.toString()+'.png', name: d.name}));
       // cc = cc.map(d => ({x:d.x, y:d.y, img: 'visualization.png'}))
       
@@ -109,7 +112,7 @@ function App() {
       ss['datasets']['lv'] = lv.map((d, i) => ({x: d[0], y:d[1], method: rf[i], cls: cls[i]}));
       ss['datasets']['cc'] = cc;
 
-      const ld = require(`/public/json/${dataset}/${cc[0].name}`);
+      
       let labelColors = d3.scaleOrdinal(d3.schemeCategory10);
       const emb = embScale(ld.emb)
       const radius = 8;
@@ -132,10 +135,14 @@ function App() {
     })().then(result => {
 
       result.view.addEventListener('mouseover', (event, item) => {
-        if (item.image && item.datum){
+        if (item) {
+          if (item.image && item.datum){
+            console.log(item.datum)
           let newLD = require(`/public/json/${dataset}/${item.datum.name}`);
             let newEmb = embScale(newLD.emb);
             mainViewSplot.update({position: newEmb}, 500, 0);
+
+          }
 
         }
 
@@ -157,13 +164,19 @@ function App() {
 
     
     
-  }, []);
+  }, [xxx]);
   
 
 
 
-  return (
+  return (<Box>
+      <Select
+      options={['spheres_2000_3', 'mnist_1000_1', 'mnist_1000_7',  'grid6_7776_5']}
+      value={xxx}
+      onChange={({ option }) => {setDataset(option); dataset = option.split('_')[0]}}
+    />
     <Box className="app" style={{display: 'inline'}}>
+    
       <Box id="vis-mdp" style={{display: 'inline-block'}} />
       <Box style={{width: '800px', height: '800px', display: 'inline-block', outline: '1px solid black'}}>
         <canvas
@@ -172,7 +185,8 @@ function App() {
           height={800}
         ></canvas>
       </Box>
-    </Box>  
+    </Box> 
+    </Box> 
   );
 }
 
