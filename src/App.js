@@ -2,7 +2,7 @@ import './App.css';
 import * as d3 from "d3";
 
 import { Box, Select } from 'grommet';
-import {  VegaLite } from 'react-vega'
+import { VegaLite } from 'react-vega'
 
 import embed from 'vega-embed';
 import { useEffect, useRef, useState } from 'react';
@@ -25,171 +25,171 @@ function embScale(embedding) {
 
 function App() {
 
-  
-  const [xxx, setDataset] = useState('spheres_2000_3');
-  let dataset = xxx.split('_')[0];
-  const ss = {
-    layer: [
-      {
-        data: { name: "lv"},
-        width: '800',
-        height: '800',
-        mark: {type: 'circle', opacity: 0.3},
-        encoding: {
-          x: {"field": "x", type: "quantitative", "axis": {"grid": false, "labels": false, "tickSize": 0}, title: null },
-          y: {"field": "y", type: "quantitative", "axis": {"grid": false, "labels": false, "tickSize": 0}, title: null },
-          color: {"field": "cls", type: "nominal", legend: null}
-      },
-      },{
-        params: [
-          {
-            name: "highlight",
-            select: {type: "point", on:"mouseover", fields: ["img"]}, value: false
-          },
-          
-        ],
-        data: { name: 'cc'},
-        width: 800,
-        height: 800,
-        mark: {type: "image", width: 80, height: 80},
-        encoding: {
-          x: {field: "x", type: "quantitative"},
-          y: {field: "y", type: "quantitative"},
-          url: {field: "img", type: "nominal"},
-          opacity: {condition: {param: "highlight", empty: false, value: 0}, value: 1}
-    
-        }
-    }, {
-      transform: [{filter: {param: "highlight"}}],
-      data: { name: 'cc'},
-      width: 800,
-      height: 800,
-      mark: {type: "image", width: 200, height: 200},
-        encoding: {
-          x: {field: "x", type: "quantitative"},
-          y: {field: "y", type: "quantitative"},
-          url: {field: "img", type: "nominal"},
-          opacity: {condition: {param: "highlight", empty: false, value: 1}, value: 0}
-    
-        }
+
+	const [xxx, setDataset] = useState('spheres_2000_3');
+	let dataset = xxx.split('_')[0];
+	const ss = {
+		layer: [
+			{
+				data: { name: "lv" },
+				width: '800',
+				height: '800',
+				mark: { type: 'circle', opacity: 0.3 },
+				encoding: {
+					x: { "field": "x", type: "quantitative", "axis": { "grid": false, "labels": false, "tickSize": 0 }, title: null },
+					y: { "field": "y", type: "quantitative", "axis": { "grid": false, "labels": false, "tickSize": 0 }, title: null },
+					color: { "field": "cls", type: "nominal", legend: null }
+				},
+			}, {
+				params: [
+					{
+						name: "highlight",
+						select: { type: "point", on: "mouseover", fields: ["img"] }, value: false
+					},
+
+				],
+				data: { name: 'cc' },
+				width: 800,
+				height: 800,
+				mark: { type: "image", width: 80, height: 80 },
+				encoding: {
+					x: { field: "x", type: "quantitative" },
+					y: { field: "y", type: "quantitative" },
+					url: { field: "img", type: "nominal" },
+					opacity: { condition: { param: "highlight", empty: false, value: 0 }, value: 1 }
+
+				}
+			}, {
+				transform: [{ filter: { param: "highlight" } }],
+				data: { name: 'cc' },
+				width: 800,
+				height: 800,
+				mark: { type: "image", width: 200, height: 200 },
+				encoding: {
+					x: { field: "x", type: "quantitative" },
+					y: { field: "y", type: "quantitative" },
+					url: { field: "img", type: "nominal" },
+					opacity: { condition: { param: "highlight", empty: false, value: 1 }, value: 0 }
+
+				}
 
 
-    }
-    ],
-    datasets: {
-      lv: [],
-      cc: []
-    }
+			}
+		],
+		datasets: {
+			lv: [],
+			cc: []
+		}
 
-  }
+	}
 
 
-  const mainViewRef = useRef(null);
+	const mainViewRef = useRef(null);
 
-  const labelData = require(`/public/json/${dataset}/label.json`);
-  
-  let mainViewSplot;
-  
-  
-  useEffect(() => {
+	const labelData = require(`/public/json/${dataset}/label.json`);
 
-    (async function() {
+	let mainViewSplot;
 
-      const opacity = ['0.7', '1.0'][0]
 
-      
-      let lv = require(`/public/json/${xxx}_lv.json`);
-      let rf = require(`/public/json/${xxx}_rf.json`);
-      let cc = require(`/public/json/${xxx}_cc.json`);
-      
-      let cls = require(`/public/json/${xxx}_cls.json`);
-      const ld = require(`/public/json/${dataset}/${cc[0].name}`);
-      // cc = cc.map(d => ({x:d.x, y:d.y, img: 'https://aeri206.github.io/mdp-tour/img/'+xxx + '/' + +opacity+'/'+d.num.toString()+'.png', name: d.name}));
-      cc = cc.map(d => ({x:d.x, y:d.y, img: 'https://aeri206.github.io/mdp-tour/img/'+opacity+'/'+d.num.toString()+'.png', name: d.name}));
-      // cc = cc.map(d => ({x:d.x, y:d.y, img: 'visualization.png'}))
-      
-      rf = rf.map(x => x.split('-')[0]);
-      // s['data']['values'] = lv.map((d, i) => ({x: d[0], y:d[1], method: rf[i]}))
-      ss['datasets']['lv'] = lv.map((d, i) => ({x: d[0], y:d[1], method: rf[i], cls: cls[i]}));
-      ss['datasets']['cc'] = cc;
+	useEffect(() => {
 
-      
-      let labelColors = d3.scaleOrdinal(d3.schemeCategory10);
-      const emb = embScale(ld.emb)
-      const radius = 8;
-      const colorData = labelData.map(idx => {
-        const color = d3.rgb(labelColors(idx));
-        return [color.r, color.g, color.b];
-      });
-      
-      const data = {
-        position: emb,
-        opacity: new Array(emb.length).fill(1),
-        color: colorData,
-        border: new Array(emb.length).fill(0),
-        borderColor: colorData,
-        radius: new Array(emb.length).fill(radius),
-      }
-      mainViewSplot = new Scatterplot(data, mainViewRef.current);
-      
-      return embed('#vis-mdp', ss, {"mode": "vega-lite", "actions": false});
-    })().then(result => {
+		(async function () {
 
-      result.view.addEventListener('mouseover', (event, item) => {
-        if (item) {
-          if (item.image && item.datum){
-            console.log(item.datum)
-          let newLD = require(`/public/json/${dataset}/${item.datum.name}`);
-            let newEmb = embScale(newLD.emb);
-            mainViewSplot.update({position: newEmb}, 500, 0);
+			const opacity = ['0.7', '1.0'][0]
 
-          }
 
-        }
+			let lv = require(`/public/json/${xxx}_lv.json`);
+			let rf = require(`/public/json/${xxx}_rf.json`);
+			let cc = require(`/public/json/${xxx}_cc.json`);
 
-      })
-      result.view.addEventListener('click', (event, item) => {
-        
-        if (item){
-          if (item.image && item.datum){
-            // let newLD = require(`/public/json/${dataset}/${item.datum.name}`);
-            // let newEmb = embScale(newLD.emb);
-            // mainViewSplot.update({position: newEmb}, 1000, 0);
+			let cls = require(`/public/json/${xxx}_cls.json`);
+			const ld = require(`/public/json/${dataset}/${cc[0].name}`);
+			// cc = cc.map(d => ({x:d.x, y:d.y, img: 'https://aeri206.github.io/mdp-tour/img/'+xxx + '/' + +opacity+'/'+d.num.toString()+'.png', name: d.name}));
+			cc = cc.map(d => ({ x: d.x, y: d.y, img: 'https://aeri206.github.io/mdp-tour/img/' + opacity + '/' + d.num.toString() + '.png', name: d.name }));
+			// cc = cc.map(d => ({x:d.x, y:d.y, img: 'visualization.png'}))
 
-          }
-        }
-      });
-    });
+			rf = rf.map(x => x.split('-')[0]);
+			// s['data']['values'] = lv.map((d, i) => ({x: d[0], y:d[1], method: rf[i]}))
+			ss['datasets']['lv'] = lv.map((d, i) => ({ x: d[0], y: d[1], method: rf[i], cls: cls[i] }));
+			ss['datasets']['cc'] = cc;
 
-    
 
-    
-    
-  }, [xxx]);
-  
+			let labelColors = d3.scaleOrdinal(d3.schemeCategory10);
+			const emb = embScale(ld.emb)
+			const radius = 8;
+			const colorData = labelData.map(idx => {
+				const color = d3.rgb(labelColors(idx));
+				return [color.r, color.g, color.b];
+			});
+
+			const data = {
+				position: emb,
+				opacity: new Array(emb.length).fill(1),
+				color: colorData,
+				border: new Array(emb.length).fill(0),
+				borderColor: colorData,
+				radius: new Array(emb.length).fill(radius),
+			}
+			mainViewSplot = new Scatterplot(data, mainViewRef.current);
+
+			return embed('#vis-mdp', ss, { "mode": "vega-lite", "actions": false });
+		})().then(result => {
+
+			result.view.addEventListener('mouseover', (event, item) => {
+				if (item) {
+					if (item.image && item.datum) {
+						console.log(item.datum)
+						let newLD = require(`/public/json/${dataset}/${item.datum.name}`);
+						let newEmb = embScale(newLD.emb);
+						mainViewSplot.update({ position: newEmb }, 500, 0);
+
+					}
+
+				}
+
+			})
+			result.view.addEventListener('click', (event, item) => {
+
+				if (item) {
+					if (item.image && item.datum) {
+						// let newLD = require(`/public/json/${dataset}/${item.datum.name}`);
+						// let newEmb = embScale(newLD.emb);
+						// mainViewSplot.update({position: newEmb}, 1000, 0);
+
+					}
+				}
+			});
+		});
 
 
 
-  return (<Box>
-      <Select
-      options={['spheres_2000_3', 'mnist_1000_1', 'mnist_1000_7',  'grid6_7776_5']}
-      value={xxx}
-      onChange={({ option }) => {setDataset(option); dataset = option.split('_')[0]}}
-    />
-    <Box className="app" style={{display: 'inline'}}>
-    
-      <Box id="vis-mdp" style={{display: 'inline-block'}} />
-      <Box style={{width: '800px', height: '800px', display: 'inline-block', outline: '1px solid black'}}>
-        <canvas
-          ref={mainViewRef}
-          width={800}
-          height={800}
-        ></canvas>
-      </Box>
-    </Box> 
-      <LatentView />
-    </Box> 
-  );
+
+
+	}, [xxx]);
+
+
+
+
+	return (<Box>
+		<Select
+			options={['spheres_2000_3', 'mnist_1000_1', 'mnist_1000_7', 'grid6_7776_5']}
+			value={xxx}
+			onChange={({ option }) => { setDataset(option); dataset = option.split('_')[0] }}
+		/>
+		<Box className="app" style={{ display: 'inline' }}>
+
+			<Box id="vis-mdp" style={{ display: 'inline-block' }} />
+			<Box style={{ width: '800px', height: '800px', display: 'inline-block', outline: '1px solid black' }}>
+				<canvas
+					ref={mainViewRef}
+					width={800}
+					height={800}
+				></canvas>
+			</Box>
+		</Box>
+		<LatentView dataset={xxx} />
+	</Box>
+	);
 }
 
 export default App;
