@@ -7,6 +7,7 @@ import {  VegaLite } from 'react-vega'
 import embed from 'vega-embed';
 import { useEffect, useRef, useState } from 'react';
 import { Scatterplot } from "./components/scatterplot";
+import LatentView from './components/latentView';
 
 
 function embScale(embedding) {
@@ -186,6 +187,7 @@ function App() {
         ></canvas>
       </Box>
     </Box> 
+      <LatentView />
     </Box> 
   );
 }
