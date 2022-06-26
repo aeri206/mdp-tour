@@ -1,6 +1,6 @@
 /* Hyeon Hwaiting */
 import * as d3 from "d3";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 
 
@@ -24,10 +24,12 @@ function LatentView(props) {
 	let metric = null;
 	const lv_emb = embScale(lv);
 
-	const width = 270;
-	const height = 270;
+	const width = 300;
+	const height = 300;
 
+	const trustLegendRef = useRef(null);
 
+	// useEffect for rendering trustworthiness / continuity scatterplot
 	useEffect(() => {
 		if (metric === null) return;
 
@@ -35,9 +37,9 @@ function LatentView(props) {
 		let ctx = canvas.getContext('2d');
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-		const trustColor = d3.scaleLinear()
+		const trustColor = d3.scaleSequential()
 			.domain([d3.min(metric.map(d => d["Trustworthiness"])), d3.max(metric.map(d => d["Trustworthiness"]))])
-			.range(["white", "blue"])
+			.interpolator(d3.interpolatePRGn);
 		lv_emb.forEach((lve, i) => {
 			ctx.beginPath();
 			ctx.arc(lve[0] * width, lve[1] * height, 1.5, 0, 2 * Math.PI);
@@ -50,9 +52,9 @@ function LatentView(props) {
 		ctx = canvas.getContext('2d');
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-		const contiColor = d3.scaleLinear()
+		const contiColor = d3.scaleSequential()
 			.domain([d3.min(metric.map(d => d["Continuity"])), d3.max(metric.map(d => d["Continuity"]))])
-			.range(["white", "red"])
+			.interpolator(d3.interpolateRdBu);
 		lv_emb.forEach((lve, i) => {
 			ctx.beginPath();
 			ctx.arc(lve[0] * width, lve[1] * height, 1.5, 0, 2 * Math.PI);
@@ -60,7 +62,19 @@ function LatentView(props) {
 			ctx.fillStyle = color;
 			ctx.fill();
 		});
+	});
 
+	// useEffect for rendering trustworthiness / continuity scatterplot legend
+	useEffect(() => {
+		if (metric === null) return;
+		const svg = d3.selectAll(trustLegendRef.current)
+		const data = new Array(10).fill(0);
+		svg.append("rect").attr("x", 25).attr("y", 25).attr("width", 20).attr("height", 20).attr("fill", "black");
+		// .enter()
+		// .append("rect")
+		// 	.attr("x", 25)
+		// 	.attr("y", (d, i) => i * 9 + 5)
+		// 	.attr("width", 9)
 
 	});
 
@@ -78,9 +92,12 @@ function LatentView(props) {
 
 	return (
 		<div style={{ display: "flex" }}>
-			<div>
-				<div style={{ marginLeft: 10 }}>Trustworthiness</div>
-				<canvas id="trust" width={width} height={height}></canvas>
+			<div style={{ display: "flex" }}>
+				<div>
+					<div style={{ marginLeft: 10 }}>Trustworthiness</div>
+					<canvas id="trust" width={width} height={height}></canvas>
+				</div>
+				<svg width={100} height={height} ref={trustLegendRef}></svg>
 			</div>
 			<div>
 				<div style={{ marginLeft: 10 }}>Continuity</div>
