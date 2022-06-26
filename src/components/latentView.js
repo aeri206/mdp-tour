@@ -24,6 +24,9 @@ function LatentView(props) {
 	let metric = null;
 	const lv_emb = embScale(lv);
 
+	const width = 270;
+	const height = 270;
+
 
 	useEffect(() => {
 		if (metric === null) return;
@@ -37,7 +40,7 @@ function LatentView(props) {
 			.range(["white", "blue"])
 		lv_emb.forEach((lve, i) => {
 			ctx.beginPath();
-			ctx.arc(lve[0] * 300, lve[1] * 300, 2, 0, 2 * Math.PI);
+			ctx.arc(lve[0] * width, lve[1] * height, 2, 0, 2 * Math.PI);
 			const color = trustColor(metric[i]["Trustworthiness"]);
 			ctx.fillStyle = color;
 			ctx.fill();
@@ -52,7 +55,7 @@ function LatentView(props) {
 			.range(["white", "red"])
 		lv_emb.forEach((lve, i) => {
 			ctx.beginPath();
-			ctx.arc(lve[0] * 300, lve[1] * 300, 2, 0, 2 * Math.PI);
+			ctx.arc(lve[0] * width, lve[1] * height, 2, 0, 2 * Math.PI);
 			const color = contiColor(metric[i]["Continuity"]);
 			ctx.fillStyle = color;
 			ctx.fill();
@@ -75,8 +78,17 @@ function LatentView(props) {
 
 	return (
 		<div style={{ display: "flex" }}>
-			<canvas id="trust" width={300} height={300}></canvas>
-			<canvas id="conti" width={300} height={300}></canvas>
+			<div>
+				<div style={{ marginLeft: 10 }}>Trustworthiness</div>
+				<canvas id="trust" width={width} height={height}></canvas>
+			</div>
+			<div>
+				<div style={{ marginLeft: 10 }}>Continuity</div>
+				<canvas id="conti" width={width} height={height}></canvas>
+			</div>
+			<div>
+				{/* 여기 이제 method를 보여주는 vega를 넣으면 됨 */}
+			</div>
 		</div>
 	);
 }
