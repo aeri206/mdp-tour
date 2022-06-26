@@ -40,7 +40,7 @@ function LatentView(props) {
 			.range(["white", "blue"])
 		lv_emb.forEach((lve, i) => {
 			ctx.beginPath();
-			ctx.arc(lve[0] * width, lve[1] * height, 2, 0, 2 * Math.PI);
+			ctx.arc(lve[0] * width, lve[1] * height, 1.5, 0, 2 * Math.PI);
 			const color = trustColor(metric[i]["Trustworthiness"]);
 			ctx.fillStyle = color;
 			ctx.fill();
@@ -55,7 +55,7 @@ function LatentView(props) {
 			.range(["white", "red"])
 		lv_emb.forEach((lve, i) => {
 			ctx.beginPath();
-			ctx.arc(lve[0] * width, lve[1] * height, 2, 0, 2 * Math.PI);
+			ctx.arc(lve[0] * width, lve[1] * height, 1.5, 0, 2 * Math.PI);
 			const color = contiColor(metric[i]["Continuity"]);
 			ctx.fillStyle = color;
 			ctx.fill();
