@@ -2,7 +2,6 @@ import './App.css';
 import * as d3 from "d3";
 
 import { Box, Select } from 'grommet';
-import {  VegaLite } from 'react-vega'
 
 import embed from 'vega-embed';
 import { useEffect, useRef, useState } from 'react';
