@@ -7,6 +7,7 @@
     "@testing-library/jest-dom": "^5.16.3",
     "@testing-library/react": "^12.1.4",
     "@testing-library/user-event": "^13.5.0",
+    "d3": "^7.4.5",
     "grommet": "^2.24.0",
     "grommet-icons": "^4.7.0",
     "react": "^17.0.0",

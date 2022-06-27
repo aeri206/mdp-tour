@@ -2,6 +2,7 @@ import './App.css';
 import * as d3 from "d3";
 
 import { Box, Select } from 'grommet';
+import { VegaLite } from 'react-vega'
 
 import embed from 'vega-embed';
 import { useEffect, useRef, useState } from 'react';
@@ -201,29 +202,28 @@ function App() {
 
 
 
-  return (
-  <Box>
-      <Select
-      options={['spheres_2000_3', 'mnist_1000_1', 'grid6_7776_5']}
-      value={xxx}
-      onChange={({ option }) => {setDataset(option); dataset = option.split('_')[0]}}
-    />
-    <Box className="app" style={{display: 'inline'}}>
-    
-      <Box id="vis-mdp" style={{display: 'inline-block'}} />
-      <Box style={{width: '800px', height: '800px', display: 'inline-block', outline: '1px solid black'}}>
-        <canvas
-          ref={mainViewRef}
-          width={800}
-          height={800}
-        ></canvas>
-      </Box>
-    </Box> 
-    <Box className="latentView" style={{width: '800px', height: '800px',outline: '1px solid black'}}>
-      <LatentView />
-    </Box>
-    </Box> 
-  );
+	return (<Box>
+		<Select
+			options={['spheres_2000_3', 'mnist_1000_1', 'mnist_1000_7', 'grid6_7776_5']}
+			value={xxx}
+			onChange={({ option }) => { setDataset(option); dataset = option.split('_')[0] }}
+		/>
+		<Box className="app" style={{ display: 'inline' }}>
+
+			<Box id="vis-mdp" style={{ display: 'inline-block' }} />
+			<Box style={{ width: '800px', height: '800px', display: 'inline-block', outline: '1px solid black' }}>
+				<canvas
+					ref={mainViewRef}
+					width={800}
+					height={800}
+				></canvas>
+			</Box>
+		</Box>
+		<LatentView dataset={xxx} />
+	</Box>
+	);
+
+
 }
 
 export default App;
