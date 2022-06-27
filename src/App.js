@@ -204,7 +204,7 @@ function App() {
 
 	return (<Box>
 		<Select
-			options={['spheres_2000_3', 'mnist_1000_1', 'mnist_1000_7', 'grid6_7776_5']}
+			options={['spheres_2000_3', 'mnist_1000_1', 'grid6_7776_5']}
 			value={xxx}
 			onChange={({ option }) => { setDataset(option); dataset = option.split('_')[0] }}
 		/>
