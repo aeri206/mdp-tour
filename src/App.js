@@ -124,7 +124,6 @@ function App() {
       
       ss['datasets']['lv'] = lv.current.map((d, i) => ({x: d[0], y:d[1], method: rf.current[i].split('-')[0], cls: cls[i]}));
       ss['datasets']['cc'] = cc.current;
-      console.log(ss['datasets']['lv']);
       ss['datasets']['focus'] = [{x: cc.current[0].x, y: cc.current[0].y}];
 
       
@@ -150,7 +149,6 @@ function App() {
       
       return embed('#vis-mdp', ss, {"mode": "vega-lite", "actions": false});
     })().then(result => {
-      console.log(result.view)
       
 
 
@@ -161,7 +159,6 @@ function App() {
               
               let newPath = path.current.filter(x => x.source === selectedCluster.current && x.target === item.datum.num)[0].path;
               let newLDs = [];
-              console.log(newPath)
               newPath.slice(1).forEach(point => {
                 let newLD = require(`/public/json/${dataset}/${rf.current[point]}`);
                 let newEmb = embScale(newLD.emb);
@@ -174,9 +171,9 @@ function App() {
                     let focusData = result.view.data('focus')
                     result.view.change('focus', result.view.changeset().remove(focusData[0]).insert([{x: lv.current[newPath[i+1]][0], y: lv.current[newPath[i+1]][1]}])).run();
 
-                      mainViewSplot.update({position: newLDs[i]}, 1000, 0);
+                      mainViewSplot.update({position: newLDs[i]}, 500, 0);
                       await new Promise(resolve => {
-                      setTimeout(() => { resolve()}, 1020);
+                      setTimeout(() => { resolve()}, 520);
                   });
                   }
               })();
@@ -207,7 +204,7 @@ function App() {
   return (
   <Box>
       <Select
-      options={['spheres_2000_3', 'mnist_1000_1', 'mnist_1000_7',  'grid6_7776_5']}
+      options={['spheres_2000_3', 'mnist_1000_1', 'grid6_7776_5']}
       value={xxx}
       onChange={({ option }) => {setDataset(option); dataset = option.split('_')[0]}}
     />
