@@ -120,7 +120,7 @@ function App() {
       
       let cls = require(`/public/json/${xxx}_cls.json`);
       const ld = require(`/public/json/${dataset}/${cc.current[0].name}`);
-      cc.current = cc.current.map(d => ({x:d.x, y:d.y, img: 'https://aeri206.github.io/mdp-tour/img/0.7/'+d.num.toString()+'.png', name: d.name, num: d.num}));
+      cc.current = cc.current.map(d => ({x:d.x, y:d.y, img: 'https://aeri206.github.io/mdp-tour/img/' + xxx + '/' +d.num.toString()+'.png', name: d.name, num: d.num}));
       
       ss['datasets']['lv'] = lv.current.map((d, i) => ({x: d[0], y:d[1], method: rf.current[i].split('-')[0], cls: cls[i]}));
       ss['datasets']['cc'] = cc.current;
