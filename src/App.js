@@ -1,7 +1,7 @@
 import './App.css';
 import * as d3 from "d3";
 
-import { Box, Select } from 'grommet';
+import { Box, Select, RangeInput } from 'grommet';
 import { VegaLite } from 'react-vega'
 
 import embed from 'vega-embed';
@@ -30,6 +30,8 @@ function App() {
   const rf = useRef([]);
   const lv = useRef([]);
   const cc = useRef([]);
+  const [speed, setSpeed] = useState(1000);
+  
 
   
   const [xxx, setDataset] = useState('spheres_2000_3');
@@ -172,9 +174,9 @@ function App() {
                     let focusData = result.view.data('focus')
                     result.view.change('focus', result.view.changeset().remove(focusData[0]).insert([{x: lv.current[newPath[i+1]][0], y: lv.current[newPath[i+1]][1]}])).run();
 
-                      mainViewSplot.update({position: newLDs[i]}, 1000, 0);
+                      mainViewSplot.update({position: newLDs[i]}, speed, 0);
                       await new Promise(resolve => {
-                      setTimeout(() => { resolve()}, 1010);
+                      setTimeout(() => { resolve()}, (speed + 15));
                   });
                   }
               })();
@@ -203,11 +205,26 @@ function App() {
 
 
 	return (<Box>
+    <Box className="control" style={{ display: 'inline' }}>
+    <Box style={{'display': 'inline-block'}}>
 		<Select
 			options={['spheres_2000_3', 'mnist_1000_1', 'grid6_7776_5']}
 			value={xxx}
 			onChange={({ option }) => { setDataset(option); dataset = option.split('_')[0] }}
 		/>
+    </Box>
+    <Box style={{'display': 'inline-block', paddingRight: '20px'}}>speed 100</Box>
+    <Box style={{'display': 'inline-block'}}>
+    <RangeInput
+      min={100}
+      max={1200}
+      step={100}
+      value={speed}
+      onChange={event => setSpeed(event.target.value)}
+    />
+    </Box>
+    <Box style={{'display': 'inline-block', paddingLeft: '20px'}}>1200</Box>
+    </Box>
 		<Box className="app" style={{ display: 'inline' }}>
 
 			<Box id="vis-mdp" style={{ display: 'inline-block' }} />
