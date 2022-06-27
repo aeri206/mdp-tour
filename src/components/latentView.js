@@ -27,8 +27,6 @@ function LatentView(props) {
 	const width = 300;
 	const height = 300;
 
-	const trustLegendRef = useRef(null);
-
 	// useEffect for rendering trustworthiness / continuity scatterplot
 	useEffect(() => {
 		if (metric === null) return;
@@ -67,14 +65,40 @@ function LatentView(props) {
 	// useEffect for rendering trustworthiness / continuity scatterplot legend
 	useEffect(() => {
 		if (metric === null) return;
-		const svg = d3.selectAll(trustLegendRef.current)
-		const data = new Array(10).fill(0);
-		svg.append("rect").attr("x", 25).attr("y", 25).attr("width", 20).attr("height", 20).attr("fill", "black");
-		// .enter()
-		// .append("rect")
-		// 	.attr("x", 25)
-		// 	.attr("y", (d, i) => i * 9 + 5)
-		// 	.attr("width", 9)
+
+
+		const legendWidth = 20;
+		const legendCellHeight = 5;
+		const legendHeight = 300;
+		const legendMargin = 20;
+
+		function drawLegend(id, color) {
+			let canvas = document.getElementById(id);
+			let ctx = canvas.getContext('2d');
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			ctx.beginPath();
+			for (let i = 0; i < 54; i++) {
+				ctx.fillStyle = color(i / 54);
+				ctx.fillRect(legendMargin, legendCellHeight * i + legendMargin, legendWidth, legendCellHeight);
+			}
+			ctx.fillStyle = 'black';
+			ctx.font = '14px Arial';
+			ctx.fillText("Bad", legendMargin + legendWidth + 5, legendMargin + legendCellHeight * 1.5);
+			ctx.fillText("Good", legendMargin + legendWidth + 5, legendMargin + legendCellHeight * 54);
+		}
+
+		const trustColor = d3.scaleSequential()
+			.domain([0, 1])
+			.interpolator(d3.interpolatePRGn);
+
+		drawLegend('trustLegend', trustColor);
+
+		const contiColor = d3.scaleSequential()
+			.domain([0, 1])
+			.interpolator(d3.interpolateRdBu);
+
+		drawLegend('contiLegend', contiColor);
+
 
 	});
 
@@ -97,14 +121,16 @@ function LatentView(props) {
 					<div style={{ marginLeft: 10 }}>Trustworthiness</div>
 					<canvas id="trust" width={width} height={height}></canvas>
 				</div>
-				<svg width={100} height={height} ref={trustLegendRef}></svg>
+				<canvas width={100} height={height} id="trustLegend"></canvas>
+			</div>
+			<div style={{ display: "flex" }}>
+				<div>
+					<div style={{ marginLeft: 10 }}>Continuity</div>
+					<canvas id="conti" width={width} height={height}></canvas>
+				</div>
+				<canvas width={100} height={height} id="contiLegend"></canvas>
 			</div>
 			<div>
-				<div style={{ marginLeft: 10 }}>Continuity</div>
-				<canvas id="conti" width={width} height={height}></canvas>
-			</div>
-			<div>
-				{/* 여기 이제 method를 보여주는 vega를 넣으면 됨 */}
 			</div>
 		</div>
 	);
