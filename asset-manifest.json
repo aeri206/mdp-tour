@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/mdp-tour/static/css/main.ecdd67fb.css",
-    "main.js": "/mdp-tour/static/js/main.13e43eea.js",
+    "main.js": "/mdp-tour/static/js/main.84fc5ac0.js",
     "static/js/787.c1112931.chunk.js": "/mdp-tour/static/js/787.c1112931.chunk.js",
     "index.html": "/mdp-tour/index.html",
     "main.ecdd67fb.css.map": "/mdp-tour/static/css/main.ecdd67fb.css.map",
-    "main.13e43eea.js.map": "/mdp-tour/static/js/main.13e43eea.js.map",
+    "main.84fc5ac0.js.map": "/mdp-tour/static/js/main.84fc5ac0.js.map",
     "787.c1112931.chunk.js.map": "/mdp-tour/static/js/787.c1112931.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.ecdd67fb.css",
-    "static/js/main.13e43eea.js"
+    "static/js/main.84fc5ac0.js"
   ]
 }
