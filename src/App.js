@@ -172,9 +172,9 @@ function App() {
                     let focusData = result.view.data('focus')
                     result.view.change('focus', result.view.changeset().remove(focusData[0]).insert([{x: lv.current[newPath[i+1]][0], y: lv.current[newPath[i+1]][1]}])).run();
 
-                      mainViewSplot.update({position: newLDs[i]}, 500, 0);
+                      mainViewSplot.update({position: newLDs[i]}, 1000, 0);
                       await new Promise(resolve => {
-                      setTimeout(() => { resolve()}, 520);
+                      setTimeout(() => { resolve()}, 1010);
                   });
                   }
               })();
